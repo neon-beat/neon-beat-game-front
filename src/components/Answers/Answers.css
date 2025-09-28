@@ -1,0 +1,39 @@
+.answers-container {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.answer-item {
+  display: flex;
+  justify-content: space-between;
+  padding: 0.5rem;
+  background: #2a0035 url(/images/grain.svg);
+  /* background-color: #370143; */
+  background-blend-mode: multiply;
+  /* deep purple base */
+  border: 4px solid #d70085;
+  /* vibrant magenta border */
+  box-shadow:
+    0 0 0 2px #ff3cac,
+    /* bright neon inner edge */
+    0 0 0 4px #670070,
+    /* darker purple border step */
+    4px 4px 0 0 #ff7200,
+    /* orange 'outer glow' bottom right */
+    inset -2px -2px 0 #0e001e;
+  /* inner shadow for depth */
+  padding: 16px;
+  font-family: 'Press Start 2P', monospace;
+  /* retro pixel font */
+  font-size: x-large;
+  color: #ffcc00;
+  text-align: center;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  margin-bottom: 20px;
+}
+
+.answer-key {
+  font-weight: bold;
+}

@@ -1,0 +1,21 @@
+.custom-gradient {
+  background: url(/images/grain.svg), linear-gradient(15deg,
+      #3d003c 0%,
+      #52003f 15%,
+      #660042 40%,
+      #77082f 50%,
+      #660042 60%,
+      #52003f 85%,
+      #3d003c 100%);
+  background-blend-mode: multiply;
+}
+
+.custom-border {
+  box-shadow:
+    0 0 0 12px #c207a0,
+    /* Dark pink outer border */
+    8px 8px 0 #ff5a00;
+  /* Subtle inner corner depth */
+  border-radius: 0;
+  /* Square edges; remove if using pseudo cut-corners */
+}

@@ -1,0 +1,48 @@
+@import 'tailwindcss';
+
+
+body {
+  background-image: url('./assets/background.png');
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+  height: 100vh;
+  margin: 0;
+  font-family: 'Press Start 2P', monospace;
+}
+
+.notbody {
+  background: radial-gradient(ellipse at center,
+      #3b003f 0%,
+      /* deep purple center */
+      #4a004b 25%,
+      /* rich magenta blend */
+      #36002f 55%,
+      /* dark violet */
+      #1e001a 80%,
+      /* near-black edges */
+      #0f000f 100%
+      /* vignette-style outer shadow */
+    );
+  background: white !important;
+  background-attachment: fixed;
+  background-repeat: no-repeat;
+  background-size: cover;
+  color: #fff;
+}
+
+body::before {
+  content: "";
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-image: repeating-linear-gradient(to bottom,
+      rgba(0, 0, 0, 0.1),
+      rgba(0, 0, 0, 0.1) 2px,
+      transparent 2px,
+      transparent 4px);
+  pointer-events: none;
+  z-index: 1;
+}
