@@ -1,5 +1,10 @@
 @import 'tailwindcss';
 
+@font-face {
+  font-family: 'Future Glitch';
+  src: url('/assests/FutureGlitch.ttf') format('truetype');
+}
+
 
 body {
   background-image: url('./assets/background.png');

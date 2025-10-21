@@ -12,6 +12,8 @@
   },
   "dependencies": {
     "@tailwindcss/vite": "^4.1.11",
+    "antd": "^5.27.5",
+    "r3f-equalizer": "^1.4.2",
     "react": "^19.1.0",
     "react-dom": "^19.1.0",
     "react-player": "^3.3.1"

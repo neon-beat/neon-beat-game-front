@@ -12,10 +12,10 @@
 
 .custom-border {
   box-shadow:
-    0 0 0 12px #c207a0,
+    0 0 0 2px #c207a0,
     /* Dark pink outer border */
-    8px 8px 0 #ff5a00;
+    0 0 0 4px #ff5a00;
   /* Subtle inner corner depth */
-  border-radius: 0;
+  border-radius: 10px;
   /* Square edges; remove if using pseudo cut-corners */
 }

@@ -2,7 +2,7 @@
 
 # Neon Beat Game (Front-End)
 
-Blind test / music quiz front-end built with React 19, TypeScript, Vite 7 and Tailwind CSS 4. Streams a YouTube video while progressively revealing answers (song title, artist, year, etc.).
+Blind test / music quiz front-end built with React 19, TypeScript, Vite 7 and Tailwind CSS 4. Streams a YouTube video while progressively revealing fields (song title, artist, year, etc.).
 
 ![App Screenshot](./src/assets/logo.png)
 
@@ -26,12 +26,12 @@ Blind test / music quiz front-end built with React 19, TypeScript, Vite 7 and Ta
 15. License
 
 ## 1. Overview
-This repository contains the front-end UI for a music blind test game. A YouTube video is embedded and players attempt to guess metadata (song / artist / year, etc.). Answers can be hidden until revealed. The current implementation is a static prototype wired with hard‑coded data; it can be extended to consume a backend or real-time game service later.
+This repository contains the front-end UI for a music blind test game. A YouTube video is embedded and players attempt to guess metadata (song / artist / year, etc.). Fields can be hidden until revealed. The current implementation is a static prototype wired with hard‑coded data; it can be extended to consume a backend or real-time game service later.
 
 ## 2. Features
 - 🚀 Fast dev environment with Vite + React Fast Refresh
 - 🎵 Embedded YouTube playback via `react-player`
-- 🧩 Dynamic answer list with masked / revealed states
+- 🧩 Dynamic field list with masked / revealed states
 - 🎨 Utility-first styling using Tailwind CSS v4 (with custom gradient + border helpers)
 - ✅ Unit testing with Vitest + Testing Library + JSDOM
 - 🧹 Strict linting (ESLint 9 + TypeScript rules) & Prettier with Tailwind plugin
@@ -81,7 +81,7 @@ src/
   main.tsx            # App bootstrap (React root)
   App.tsx             # Top-level layout & demo wiring
   components/
-    Answers/          # Answer list component
+    Fields/          # Field list component
     YoutubePlayer/    # YouTube player wrapper with optional overlay
   assets/             # Static images (logo, backgrounds)
   App.test.tsx        # Example test
@@ -91,15 +91,15 @@ vite.config.ts        # Vite + React plugin config
 ```
 
 ## 7. Core Components
-### Answers
-Displays a list of answer items with masking logic.
+### Fields
+Displays a list of field items with masking logic.
 Props:
-- `answers: { key: string; value: string; show: boolean; }[]`
+- `fields: { key: string; value: string; show: boolean; }[]`
 
 Example:
 ```tsx
-<Answers
-  answers={[
+<Fields
+  fields={[
     { key: 'Song', value: 'Darude - Sandstorm', show: false },
     { key: 'Artist', value: 'Darude', show: false },
     { key: 'Year', value: '1999', show: true },

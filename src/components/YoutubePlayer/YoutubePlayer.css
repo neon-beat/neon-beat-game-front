@@ -1,36 +1,28 @@
-.youtube-wrapper {
-  position: relative;
-  overflow: hidden;
-  aspect-ratio: 16 / 9;
+.player-overlay {
+  transition: height 0.5s ease-in-out;
 }
 
-.youtube-wrapper::after {
-  content: '';
-  position: absolute;
-  top: 0;
-  left: 0;
-  width: 100%;
+.player-overlay.visible {
   height: 100%;
-  background-image: repeating-linear-gradient(to bottom,
-      rgba(0, 0, 0, 0.1),
-      rgba(0, 0, 0, 0.1) 2px,
-      transparent 2px,
-      transparent 4px);
-  pointer-events: none;
-  z-index: 15;
 }
 
-.youtube-overlay {
-  position: absolute;
-  top: 0;
-  left: 0;
-  width: 100%;
+.player-overlay.hidden {
+  height: 0px;
+}
+
+.react-player {
+  min-height: 0px;
+  transition: height 0.5s ease-in-out;
+}
+
+.react-player.visible {
   height: 100%;
-  background-color: rgba(0, 0, 0, 1);
-  color: white;
-  font-size: 12rem;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  z-index: 20;
+}
+
+.react-player.hidden {
+  height: 0px;
+}
+
+.overlay-counter {
+  font-family: 'Future Glitch';
 }

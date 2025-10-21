@@ -1,0 +1,27 @@
+/* Base wrapper (additional spacing handled via Tailwind utility classes) */
+.teams-wrapper {
+  gap: 1rem;
+  /* fallback gap for non-tailwind contexts */
+}
+
+/* Neutral tile base enhancements (most styling via Tailwind utilities) */
+.team-tile {
+  backdrop-filter: blur(2px);
+}
+
+/* Buzzing state extra glow – combined with Tailwind ring/shadow utilities */
+.team-tile-buzzing {
+  animation: pulseGlow 1.5s ease-in-out infinite;
+}
+
+@keyframes pulseGlow {
+
+  0%,
+  100% {
+    box-shadow: 0 0 10px 2px rgba(251, 191, 36, 0.55);
+  }
+
+  50% {
+    box-shadow: 0 0 18px 4px rgba(251, 191, 36, 0.9);
+  }
+}
