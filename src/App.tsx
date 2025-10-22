@@ -7,7 +7,7 @@ import useNeonBeatPublic from './hooks/useNeonBeatPublic';
 import useEqualizerSettings from './hooks/useEqualizerSettings';
 import Fields from './components/Fields/Fields';
 import { GameState } from './types/game';
-import { useEffect, useRef, useCallback } from 'react';
+import { useEffect, useRef, useCallback, useState } from 'react';
 import intro from './assets/intro.mp3';
 import Scores from './components/Scores/Scores';
 import Equalizer from 'r3f-equalizer';
@@ -17,6 +17,7 @@ function App() {
   const { amplitude, cubeSpacing, cubeSideLength, gridCols, gridRows, cameraFov, cameraPosition } = useEqualizerSettings();
   const audioRef = useRef(new Audio(intro));
   const fadeTimeoutRef = useRef<NodeJS.Timeout | null>(null);
+  const [isPlaying, setIsPlaying] = useState(false);
 
   // Smooth fade out function
   const fadeOutAudio = useCallback((duration = 1000) => {
@@ -66,14 +67,30 @@ function App() {
     fade();
   }, []);
 
+  // Toggle play/pause function for manual control
+  const togglePlayPause = useCallback(() => {
+    if (!audioRef.current) return;
+
+    if (isPlaying) {
+      fadeOutAudio(500);
+      setIsPlaying(false);
+    } else {
+      fadeInAudio(500, 1);
+      setIsPlaying(true);
+    }
+  }, [isPlaying, fadeOutAudio, fadeInAudio]);
+
   useEffect(() => {
     const audio = audioRef.current;
     if (!audio) return;
 
     audio.loop = true;
     audio.volume = 0;
-    audio.play().catch((error) => {
+    audio.play().then(() => {
+      setIsPlaying(true);
+    }).catch((error) => {
       console.error('Error playing intro audio:', error);
+      setIsPlaying(false);
     });
 
     // Cleanup function to clear any pending fade timeouts
@@ -85,6 +102,7 @@ function App() {
       if (audio) {
         audio.pause();
         audio.currentTime = 0;
+        setIsPlaying(false);
       }
     };
   }, [])
@@ -99,9 +117,11 @@ function App() {
     if (gameState && gameState !== GameState.IDLE) {
       // Fade out smoothly when leaving IDLE state
       fadeOutAudio(1000); // 800ms fade out
+      setIsPlaying(false);
     } else {
       // Fade in smoothly when entering IDLE state
       fadeInAudio(1000, 1); // 1000ms fade in to full volume
+      setIsPlaying(true);
     }
   }, [gameState, fadeOutAudio, fadeInAudio]);
 
@@ -110,7 +130,7 @@ function App() {
       <div>
         <img src={logo} alt="Logo" className="h-150 m-auto" />
       </div>
-      <div className="grow-1 w-full">
+      <div className="grow-1 w-full relative">
         <Equalizer
           audio={audioRef}
           amplitude={amplitude}
@@ -121,6 +141,27 @@ function App() {
           cameraFov={cameraFov}
           cameraPosition={cameraPosition}
         />
+        {/* Semi-transparent Play/Pause Button */}
+        <button
+          onClick={togglePlayPause}
+          className="absolute bottom-8 right-8 w-16 h-16 rounded-full bg-black/30 hover:bg-black/50 transition-all duration-300 flex items-center justify-center backdrop-blur-sm border border-white/20 hover:border-white/40 group"
+          style={{
+            boxShadow: '0 4px 20px rgba(0, 0, 0, 0.3), 0 0 0 1px rgba(255, 255, 255, 0.1)'
+          }}
+        >
+          {isPlaying ? (
+            // Pause icon
+            <div className="flex gap-1">
+              <div className="w-1 h-4 bg-white/80 group-hover:bg-white rounded-sm"></div>
+              <div className="w-1 h-4 bg-white/80 group-hover:bg-white rounded-sm"></div>
+            </div>
+          ) : (
+            // Play icon
+            <div 
+              className="w-0 h-0 ml-1 border-l-[6px] border-l-white/80 group-hover:border-l-white border-t-[4px] border-t-transparent border-b-[4px] border-b-transparent"
+            />
+          )}
+        </button>
       </div>
     </Flex>
   );

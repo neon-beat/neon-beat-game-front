@@ -28,6 +28,7 @@
 
 .field-item-revealed {
   background: #21ca13;
+  color: black;
   box-shadow:
     0 0 0 2px #ff3cac,
     /* bright neon inner edge */

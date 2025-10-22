@@ -9,9 +9,13 @@
   backdrop-filter: blur(2px);
 }
 
-/* Buzzing state extra glow – combined with Tailwind ring/shadow utilities */
+/* Buzzing state extra glow and shake – combined with Tailwind ring/shadow utilities */
 .team-tile-buzzing {
   animation: pulseGlow 1.5s ease-in-out infinite;
+}
+
+.team-tile-buzzshake {
+  animation: buzzerShake 0.1s ease-in-out;
 }
 
 @keyframes pulseGlow {
@@ -23,5 +27,38 @@
 
   50% {
     box-shadow: 0 0 18px 4px rgba(251, 191, 36, 0.9);
+  }
+}
+
+@keyframes buzzerShake {
+  0%, 100% {
+    transform: translateX(0) translateY(0) rotate(0deg);
+  }
+  10% {
+    transform: translateX(-1px) translateY(-0.5px) rotate(-0.5deg);
+  }
+  20% {
+    transform: translateX(1px) translateY(0.5px) rotate(0.5deg);
+  }
+  30% {
+    transform: translateX(-1.5px) translateY(-0.5px) rotate(-0.3deg);
+  }
+  40% {
+    transform: translateX(1.5px) translateY(0.5px) rotate(0.3deg);
+  }
+  50% {
+    transform: translateX(-1px) translateY(-1px) rotate(-0.7deg);
+  }
+  60% {
+    transform: translateX(1px) translateY(1px) rotate(0.7deg);
+  }
+  70% {
+    transform: translateX(-0.5px) translateY(-0.5px) rotate(-0.2deg);
+  }
+  80% {
+    transform: translateX(0.5px) translateY(0.5px) rotate(0.2deg);
+  }
+  90% {
+    transform: translateX(-0.5px) translateY(0) rotate(-0.1deg);
   }
 }
