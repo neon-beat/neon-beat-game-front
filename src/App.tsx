@@ -126,11 +126,11 @@ function App() {
   }, [gameState, fadeOutAudio, fadeInAudio]);
 
   if (!gameState || gameState === GameState.IDLE) return (
-    <Flex vertical justify="center" align="center" gap="small" className="h-screen">
+    <Flex vertical justify="center" align="center" className="h-screen">
       <div>
-        <img src={logo} alt="Logo" className="h-150 m-auto" />
+        <img src={logo} alt="Logo" className="h-[50vh] m-auto" />
       </div>
-      <div className="grow-1 w-full relative">
+      <div className="grow-1 w-full relative min-h-[50vh]">
         <Equalizer
           audio={audioRef}
           amplitude={amplitude}
