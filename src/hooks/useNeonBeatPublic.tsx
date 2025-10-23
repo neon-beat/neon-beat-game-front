@@ -171,6 +171,7 @@ const useNeonBeatPublic = () => {
       setPointFieldsFound([]);
       setBonusFieldsFound([]);
       setSong(null);
+      setTeams(null);
     }
     if (gameState !== GameState.PREP_READY) {
       getTeams();
