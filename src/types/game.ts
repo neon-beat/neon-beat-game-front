@@ -18,7 +18,11 @@ export interface Team {
   buzzer_id?: string | null;
   name: string;
   score: number;
-  color?: string; // optional color for the team tile
+  color?: {
+    h: number;
+    s: number;
+    v: number;
+  }; // optional color for the team tile
 }
 
 export const GameState = {

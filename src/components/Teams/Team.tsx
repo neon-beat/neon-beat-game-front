@@ -51,6 +51,11 @@ const Team: React.FC<TeamProps> = ({
     return null;
   };
 
+  const colorToCssHsl = ({ h, s, v }: { h: number; s: number; v: number }) => {
+    return `hsl(${h}, ${s}%, ${v}%)`;
+  };
+
+
   return (
     <button
       type="button"
@@ -60,7 +65,7 @@ const Team: React.FC<TeamProps> = ({
       aria-label={`${team.name} is ${isBuzzing ? 'buzzing' : isPairing ? 'pairing' : 'idle'} with score ${team.score}`}
       data-testid={`team-tile-${team.id}`}
       style={{
-        backgroundColor: team.color || '#c207a0'
+        backgroundColor: team.color ? colorToCssHsl(team.color) : '#c207a0'
       }}
     >
       <div className="flex items-start justify-between mb-2">
