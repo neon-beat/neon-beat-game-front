@@ -168,6 +168,7 @@ const useNeonBeatPublic = () => {
       }
     }
     setTeamIdBuzzing(undefined);
+    setBuzzerIdBuzzing(undefined);
   }, [parseEventData]);
 
   useEffect(() => {
@@ -193,6 +194,10 @@ const useNeonBeatPublic = () => {
       setBonusFieldsFound([]);
       setSong(null);
       setTeams(null);
+    }
+    if (gameState === GameState.REVEAL) {
+      setTeamIdBuzzing(undefined);
+      setBuzzerIdBuzzing(undefined);
     }
     if (gameState !== GameState.PREP_READY) {
       getTeams();
