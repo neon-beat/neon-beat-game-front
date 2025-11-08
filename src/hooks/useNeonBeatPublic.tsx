@@ -255,7 +255,11 @@ const useNeonBeatPublic = () => {
       sse.removeEventListener('test.buzz', handleEvents);
     };
 
-  }, [sse, parseEventData]);
+  }, [sse, parseEventData,
+    handleFieldsFoundEvent, handleValidateAnswer, handleScoreAdjustmentEvent,
+    handlePhaseChangedEvent, handleUpdateTeams, handlePairingWaitingEvent,
+    handlePairingAssignedEvent, handlePairingRestoredEvent, handleEvents,
+  ]);
 
   return {
     // Connection status
