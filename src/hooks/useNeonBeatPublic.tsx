@@ -3,6 +3,9 @@ import { GameState, type AnswerValidation, type Song, type Team } from "../types
 import wrongSong from '../assets/sounds/qpuc-cestnon.mp3';
 import rightSong from '../assets/sounds/kk-oui-oui-oui-oui-oui.mp3';
 
+const wrongAudio = new Audio(wrongSong);
+const rightAudio = new Audio(rightSong);
+
 const useNeonBeatPublic = () => {
 
   const apiBaseUrl = import.meta.env.VITE_API_BASE_URL || 'http://localhost:8080';
@@ -154,13 +157,11 @@ const useNeonBeatPublic = () => {
     if (data) {
       console.log('answer_validation:', data);
       if (data.valid === "wrong") {
-        const wrongAudio = new Audio(wrongSong);
         wrongAudio.volume = 0.5;
         wrongAudio.play().catch((error) => {
           console.error('Error playing wrong answer sound:', error);
         });
       } else if (data.valid === "correct") {
-        const rightAudio = new Audio(rightSong);
         rightAudio.volume = 0.5;
         rightAudio.play().catch((error) => {
           console.error('Error playing right answer sound:', error);

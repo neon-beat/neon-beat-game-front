@@ -4,6 +4,65 @@
   /* fallback gap for non-tailwind contexts */
 }
 
+.teams-announcer {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%) scaleX(0);
+  background-color: #ff5a00;
+  clip-path: polygon(20px 0,
+      calc(100% - 20px) 0,
+      100% 20px,
+      100% calc(100% - 20px),
+      calc(100% - 20px) 100%,
+      20px 100%,
+      0 calc(100% - 20px),
+      0 20px);
+  z-index: 1;
+  font-family: 'Future Glitch';
+  color: white;
+  width: 0px;
+  overflow: hidden;
+  padding: 3rem 6rem;
+  transition: transform 0.15s linear,
+    width 0.15s linear;
+}
+
+.teams-announcer-visible {
+  transform: translate(-50%, -50%) scaleX(1);
+  width: fit-content;
+}
+
+.teams-announcer::before {
+  content: '';
+  position: absolute;
+  top: 2px;
+  left: 2px;
+  right: 2px;
+  bottom: 2px;
+  background: url(/images/grain.svg), linear-gradient(15deg,
+      #3d003c 0%,
+      #52003f 15%,
+      #660042 50%,
+      #52003f 85%,
+      #3d003c 100%);
+  background-blend-mode: multiply;
+  box-shadow:
+    0 0 0 2px #c207a0,
+    /* Dark pink outer border */
+    0 0 0 4px #ff5a00;
+  clip-path: polygon(20px 0,
+      calc(100% - 20px) 0,
+      100% 20px,
+      100% calc(100% - 20px),
+      calc(100% - 20px) 100%,
+      20px 100%,
+      0 calc(100% - 20px),
+      0 20px);
+  z-index: -1;
+  filter: blur(8px);
+}
+
 /* Neutral tile base enhancements (most styling via Tailwind utilities) */
 .team-tile {
   backdrop-filter: blur(2px);
