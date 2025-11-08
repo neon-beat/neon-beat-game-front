@@ -10,6 +10,8 @@ interface TeamProps {
   className?: string;
 }
 
+const buzzAudio = new Audio(buzzSound);
+
 /**
  * Individual team tile component displaying:
  * - Team name
@@ -124,7 +126,6 @@ const Team: React.FC<TeamProps> = ({
       // if (teamTile) {
       //   teamTile.classList.add('team-tile-buzzshake');
       // }
-      const buzzAudio = new Audio(buzzSound);
       buzzAudio.volume = 0.5;
       buzzAudio.play().catch((error) => {
         console.error('Error playing buzz sound:', error);

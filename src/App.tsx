@@ -131,11 +131,11 @@ function App() {
 
     if (gameState && !introSongPlayingStates.map((s) => s.toString()).includes(gameState)) {
       // Fade out smoothly when leaving IDLE state
-      fadeOutAudio(1000); // 800ms fade out
+      if (isPlaying !== false) fadeOutAudio(1000); // 800ms fade out
       setIsPlaying(false);
     } else {
       // Fade in smoothly when entering IDLE state
-      fadeInAudio(1000, 1); // 1000ms fade in to full volume
+      if (isPlaying !== true) fadeInAudio(1000, 1); // 1000ms fade in to full volume
       setIsPlaying(true);
     }
   }, [gameState, fadeOutAudio, fadeInAudio]);
