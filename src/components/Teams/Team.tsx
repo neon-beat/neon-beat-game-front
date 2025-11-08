@@ -52,8 +52,9 @@ const Team: React.FC<TeamProps> = ({
   //   return null;
   // };
 
-  const colorToCssHsl = ({ h, s, v }: { h: number; s: number; v: number }) => {
-    return `hsl(${h}, ${s}%, ${v}%)`;
+  const colorToCssHsl = ({ h }: { h: number; }) => {
+    const hsl = `hsl(${h}, 100%, 50%)`;
+    return hsl;
   };
 
   useEffect(() => {
