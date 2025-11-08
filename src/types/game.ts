@@ -28,6 +28,7 @@ export interface Team {
 export const GameState = {
   IDLE: 'idle',
   PREP_READY: 'prep_ready',
+  PREP_PAIRING: 'prep_pairing',
   PAIRING: 'pairing',
   PLAYING: 'playing',
   PAUSED: 'pause',

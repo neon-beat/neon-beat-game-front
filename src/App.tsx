@@ -19,6 +19,21 @@ function App() {
   const fadeTimeoutRef = useRef<NodeJS.Timeout | null>(null);
   const [isPlaying, setIsPlaying] = useState(false);
 
+  const introSongPlayingStates = [
+    GameState.IDLE,
+    GameState.PREP_READY,
+    GameState.PAIRING,
+    GameState.PREP_PAIRING,
+    GameState.SCORES
+  ];
+
+  const showHomeScreenState = [
+    GameState.IDLE,
+    GameState.PREP_READY,
+    GameState.PAIRING,
+    GameState.PREP_PAIRING
+  ]
+
   // Smooth fade out function
   const fadeOutAudio = useCallback((duration = 1000) => {
     if (!audioRef.current) return;
@@ -114,7 +129,7 @@ function App() {
       fadeTimeoutRef.current = null;
     }
 
-    if (gameState && gameState !== GameState.IDLE) {
+    if (gameState && !introSongPlayingStates.map((s) => s.toString()).includes(gameState)) {
       // Fade out smoothly when leaving IDLE state
       fadeOutAudio(1000); // 800ms fade out
       setIsPlaying(false);
@@ -125,7 +140,7 @@ function App() {
     }
   }, [gameState, fadeOutAudio, fadeInAudio]);
 
-  if (!gameState || gameState === GameState.IDLE) return (
+  if (!gameState || showHomeScreenState.map((s) => s.toString()).includes(gameState)) return (
     <Flex vertical justify="center" align="center" className="h-screen">
       <div>
         <img src={logo} alt="Logo" className="h-[50vh] m-auto" />

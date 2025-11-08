@@ -51,9 +51,9 @@ const Scores: React.FC<ScoresProps> = ({ teams }) => {
       <Row gutter={[16, 16]} className="w-full !px-32">
         {sortedTeams.slice(3).map((team, index) => (
           <Col span={8} key={team.id}>
-            <Flex justify="space-between" align="center" className="bg-neutral-800/50 !p-4 rounded-lg">
-              <span className="text-xl font-bold">{index + 4}. {team.name}</span>
-              <span className="text-xl font-semibold">{team.score} pt{team.score !== 1 ? 's' : ''}</span>
+            <Flex justify="space-between" align="center" className="bg-neutral-800/50 !p-4 rounded-lg text-white">
+              <span className="text-3xl font-bold">{index + 4}. {team.name}</span>
+              <span className="text-3xl font-semibold">{team.score} pt{team.score !== 1 ? 's' : ''}</span>
             </Flex>
           </Col>
         ))}
