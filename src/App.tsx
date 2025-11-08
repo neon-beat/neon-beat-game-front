@@ -189,6 +189,7 @@ function App() {
             bonusFields={song?.bonus_fields ?? []}
             pointFieldsFound={pointFieldsFound}
             bonusFieldsFound={bonusFieldsFound}
+            revealAll={gameState === GameState.REVEAL}
           />
         </div>
         <div className="grow-1 custom-gradient custom-border m-[6px]">

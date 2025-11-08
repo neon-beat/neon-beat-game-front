@@ -78,17 +78,19 @@ const useNeonBeatPublic = () => {
     const data = parseEventData<{ phase: string, song?: Song, paused_buzzer?: string }>(event.data);
     if (data) {
       console.log('phase_changed:', data);
-      setGameState(data.phase);
-      if (data.song) {
+      if (data.phase === GameState.PLAYING && gameState === GameState.REVEAL) {
         setPointFieldsFound([]);
         setBonusFieldsFound([]);
+      }
+      setGameState(data.phase);
+      if (data.song) {
         setSong(data.song);
       }
       if (data.phase === GameState.PAUSED && data.paused_buzzer) {
         setBuzzerIdBuzzing(data.paused_buzzer);
       }
     }
-  }, [parseEventData, teams]);
+  }, [parseEventData, gameState]);
 
   const handlePairingWaitingEvent = useCallback((event: MessageEvent) => {
     const data = parseEventData<{ team_id: string }>(event.data);
