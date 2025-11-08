@@ -9,56 +9,69 @@
   backdrop-filter: blur(2px);
 }
 
-/* Buzzing state extra glow and shake – combined with Tailwind ring/shadow utilities */
+/* Buzzing state: combined glow and shake animation */
 .team-tile-buzzing {
-  animation: pulseGlow 1.5s ease-in-out infinite;
+  animation: buzzerShakeGlow 0.6s ease-in-out infinite;
 }
 
-.team-tile-buzzshake {
-  animation: buzzerShake 0.1s ease-in-out;
-}
+@keyframes buzzerShakeGlow {
+  0% {
+    transform: translateX(0) translateY(0) rotate(0deg);
+    box-shadow: 0 0 10px 2px rgba(251, 191, 36, 0.55);
+  }
 
-@keyframes pulseGlow {
+  5% {
+    transform: translateX(-1px) translateY(-0.5px) rotate(-0.5deg);
+    box-shadow: 0 0 12px 2px rgba(251, 191, 36, 0.65);
+  }
 
-  0%,
-  100% {
+  10% {
+    transform: translateX(1px) translateY(0.5px) rotate(0.5deg);
+    box-shadow: 0 0 14px 3px rgba(251, 191, 36, 0.75);
+  }
+
+  15% {
+    transform: translateX(-1.5px) translateY(-0.5px) rotate(-0.3deg);
+    box-shadow: 0 0 16px 3px rgba(251, 191, 36, 0.85);
+  }
+
+  20% {
+    transform: translateX(1.5px) translateY(0.5px) rotate(0.3deg);
+    box-shadow: 0 0 18px 4px rgba(251, 191, 36, 0.9);
+  }
+
+  25% {
+    transform: translateX(-1px) translateY(-1px) rotate(-0.7deg);
+    box-shadow: 0 0 18px 4px rgba(251, 191, 36, 0.9);
+  }
+
+  30% {
+    transform: translateX(1px) translateY(1px) rotate(0.7deg);
+    box-shadow: 0 0 16px 3px rgba(251, 191, 36, 0.85);
+  }
+
+  35% {
+    transform: translateX(-0.5px) translateY(-0.5px) rotate(-0.2deg);
+    box-shadow: 0 0 14px 3px rgba(251, 191, 36, 0.75);
+  }
+
+  40% {
+    transform: translateX(0.5px) translateY(0.5px) rotate(0.2deg);
+    box-shadow: 0 0 12px 2px rgba(251, 191, 36, 0.65);
+  }
+
+  45% {
+    transform: translateX(-0.5px) translateY(0) rotate(-0.1deg);
     box-shadow: 0 0 10px 2px rgba(251, 191, 36, 0.55);
   }
 
   50% {
-    box-shadow: 0 0 18px 4px rgba(251, 191, 36, 0.9);
-  }
-}
-
-@keyframes buzzerShake {
-  0%, 100% {
     transform: translateX(0) translateY(0) rotate(0deg);
+    box-shadow: 0 0 10px 2px rgba(251, 191, 36, 0.55);
   }
-  10% {
-    transform: translateX(-1px) translateY(-0.5px) rotate(-0.5deg);
-  }
-  20% {
-    transform: translateX(1px) translateY(0.5px) rotate(0.5deg);
-  }
-  30% {
-    transform: translateX(-1.5px) translateY(-0.5px) rotate(-0.3deg);
-  }
-  40% {
-    transform: translateX(1.5px) translateY(0.5px) rotate(0.3deg);
-  }
-  50% {
-    transform: translateX(-1px) translateY(-1px) rotate(-0.7deg);
-  }
-  60% {
-    transform: translateX(1px) translateY(1px) rotate(0.7deg);
-  }
-  70% {
-    transform: translateX(-0.5px) translateY(-0.5px) rotate(-0.2deg);
-  }
-  80% {
-    transform: translateX(0.5px) translateY(0.5px) rotate(0.2deg);
-  }
-  90% {
-    transform: translateX(-0.5px) translateY(0) rotate(-0.1deg);
+
+  100% {
+    transform: translateX(0) translateY(0) rotate(0deg);
+    box-shadow: 0 0 10px 2px rgba(251, 191, 36, 0.55);
   }
 }

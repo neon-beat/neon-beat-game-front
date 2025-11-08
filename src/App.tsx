@@ -8,7 +8,7 @@ import useEqualizerSettings from './hooks/useEqualizerSettings';
 import Fields from './components/Fields/Fields';
 import { GameState } from './types/game';
 import { useEffect, useRef, useCallback, useState } from 'react';
-import intro from './assets/intro.mp3';
+import intro from './assets/sounds/intro.mp3';
 import Scores from './components/Scores/Scores';
 import Equalizer from 'r3f-equalizer';
 
@@ -157,7 +157,7 @@ function App() {
             </div>
           ) : (
             // Play icon
-            <div 
+            <div
               className="w-0 h-0 ml-1 border-l-[6px] border-l-white/80 group-hover:border-l-white border-t-[4px] border-t-transparent border-b-[4px] border-b-transparent"
             />
           )}

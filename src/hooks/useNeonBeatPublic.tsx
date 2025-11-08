@@ -1,5 +1,7 @@
 import { useEffect, useState, useCallback } from "react";
-import { GameState, type Song, type Team } from "../types/game";
+import { GameState, type AnswerValidation, type Song, type Team } from "../types/game";
+import wrongSong from '../assets/sounds/qpuc-cestnon.mp3';
+import rightSong from '../assets/sounds/kk-oui-oui-oui-oui-oui.mp3';
 
 const useNeonBeatPublic = () => {
 
@@ -145,9 +147,26 @@ const useNeonBeatPublic = () => {
     getTeams();
   }, [getTeams]);
 
-  const handleValidateAnswer = useCallback(() => {
+  const handleValidateAnswer = useCallback((event: MessageEvent) => {
+    const data = parseEventData<AnswerValidation>(event.data);
+    if (data) {
+      console.log('answer_validation:', data);
+      if (data.valid === "wrong") {
+        const wrongAudio = new Audio(wrongSong);
+        wrongAudio.volume = 0.5;
+        wrongAudio.play().catch((error) => {
+          console.error('Error playing wrong answer sound:', error);
+        });
+      } else if (data.valid === "correct") {
+        const rightAudio = new Audio(rightSong);
+        rightAudio.volume = 0.5;
+        rightAudio.play().catch((error) => {
+          console.error('Error playing right answer sound:', error);
+        });
+      }
+    }
     setTeamIdBuzzing(undefined);
-  }, []);
+  }, [parseEventData]);
 
   useEffect(() => {
     if (!apiBaseUrl) return;

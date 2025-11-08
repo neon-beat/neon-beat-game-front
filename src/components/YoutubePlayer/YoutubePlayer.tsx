@@ -45,14 +45,14 @@ const YoutubePlayer: React.FC<YoutubePlayerProps> = ({
         clearInterval(timeoutRef.current);
       }
     }
-  }, [playing]);
+  }, [playing, timer]);
 
   const finalShow = showOverlay;
 
   return (
     <Flex vertical justify="center" align="center" className="h-full w-full text-9xl text-white grow-1">
       <Flex id="player-overlay" justify="center" align="center" className={`player-overlay w-full h-full !flex ${finalShow ? 'visible' : 'hidden'}`}>
-        {finalShow && <>{(timer ?? 0) > 0 ? <p className="overlay-counter text-center">{timer?.toString()}</p> : <p className="overlay-counter text-center">Time's up !<br />Suckers</p>}
+        {finalShow && <>{(timer ?? 0) > 0 ? <p className="overlay-counter text-center">{timer?.toString()}</p> : <p className="overlay-counter text-center">Time's up !</p>}
         </>}
       </Flex>
       {youtubeUrl && <ReactPlayer

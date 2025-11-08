@@ -35,6 +35,10 @@ export const GameState = {
   SCORES: 'scores',
 } as const;
 
+export interface AnswerValidation {
+  valid: string,
+}
+
 export type GameState = typeof GameState[keyof typeof GameState];
 
 // Use named exports (no default) for types
