@@ -12,10 +12,12 @@ import intro from './assets/sounds/intro.mp3';
 import Scores from './components/Scores/Scores';
 import Equalizer from 'r3f-equalizer';
 
+const introAudio = new Audio(intro);
+
 function App() {
   const { gameState, teams, song, teamPairingWaiting, pointFieldsFound, bonusFieldsFound, teamIdBuzzing } = useNeonBeatPublic();
   const { amplitude, cubeSpacing, cubeSideLength, gridCols, gridRows, cameraFov, cameraPosition } = useEqualizerSettings();
-  const audioRef = useRef(new Audio(intro));
+  const audioRef = useRef(introAudio);
   const fadeTimeoutRef = useRef<NodeJS.Timeout | null>(null);
   const [isPlaying, setIsPlaying] = useState(false);
 
@@ -148,8 +150,10 @@ function App() {
     }
   }, [gameState]);
 
-  if (!gameState || showHomeScreenState.map((s) => s.toString()).includes(gameState)) return (
-    <Flex vertical justify="center" align="center" className="h-screen">
+  return (<>
+    <Flex vertical justify="center" align="center" className="h-screen" style={{
+      display: !gameState || showHomeScreenState.map((s) => s.toString()).includes(gameState) ? 'flex' : 'none'
+    }}>
       <div>
         <img src={logo} alt="Logo" className="h-[50vh] m-auto" />
       </div>
@@ -187,43 +191,41 @@ function App() {
         </button>
       </div>
     </Flex>
-  );
-
-  if (gameState === GameState.SCORES) return (
-    <Flex vertical justify="center" align="center" gap="small" className="h-screen !m-auto !pb-12 !px-12 max-w-[1600px]">
-      <div>
-        <img src={logo} alt="Logo" className="h-80 m-auto" />
-      </div>
-      <div className="w-full grow-1 custom-gradient custom-border">
-        <Scores teams={teams ?? []} />
-      </div>
-    </Flex>
-  );
-
-  return (
-    <Flex vertical align="center" gap="small" className="h-screen">
-      <div>
-        <img src={logo} alt="Logo" className="h-40 m-auto" />
-      </div>
-      <Flex gap="small" className="grow-1 w-full !px-4">
-        <div className="max-w-100 grow-1 custom-gradient custom-border m-[6px]">
-          <Fields
-            pointFields={song?.point_fields ?? []}
-            bonusFields={song?.bonus_fields ?? []}
-            pointFieldsFound={pointFieldsFound}
-            bonusFieldsFound={bonusFieldsFound}
-            revealAll={gameState === GameState.REVEAL}
-          />
+    {gameState && gameState === GameState.SCORES && (
+      <Flex vertical justify="center" align="center" gap="small" className="h-screen !m-auto !pb-12 !px-12 max-w-[1600px]">
+        <div>
+          <img src={logo} alt="Logo" className="h-80 m-auto" />
         </div>
-        <div className="grow-1 custom-gradient custom-border m-[6px]">
-          <YoutubePlayer youtubeUrl={song?.url} playing={gameState === GameState.PLAYING || gameState === GameState.REVEAL} showOverlay={gameState !== GameState.REVEAL} duration={song?.guess_duration_ms} start={song?.starts_at_ms} />
+        <div className="w-full grow-1 custom-gradient custom-border">
+          <Scores teams={teams ?? []} />
         </div>
       </Flex>
-      <div className="!p-2">
-        <Teams teams={teams ?? []} currentTeamPairing={teamPairingWaiting} teamBuzzing={teamIdBuzzing} />
-      </div>
-    </Flex>
-  );
+    )}
+    {gameState && !showHomeScreenState.map((s) => s.toString()).includes(gameState) && (
+      <Flex vertical align="center" gap="small" className="h-screen">
+        <div>
+          <img src={logo} alt="Logo" className="h-40 m-auto" />
+        </div>
+        <Flex gap="small" className="grow-1 w-full !px-4">
+          <div className="max-w-100 grow-1 custom-gradient custom-border m-[6px]">
+            <Fields
+              pointFields={song?.point_fields ?? []}
+              bonusFields={song?.bonus_fields ?? []}
+              pointFieldsFound={pointFieldsFound}
+              bonusFieldsFound={bonusFieldsFound}
+              revealAll={gameState === GameState.REVEAL}
+            />
+          </div>
+          <div className="grow-1 custom-gradient custom-border m-[6px]">
+            <YoutubePlayer youtubeUrl={song?.url} playing={gameState === GameState.PLAYING || gameState === GameState.REVEAL} showOverlay={gameState !== GameState.REVEAL} duration={song?.guess_duration_ms} start={song?.starts_at_ms} />
+          </div>
+        </Flex>
+        <div className="!p-2">
+          <Teams teams={teams ?? []} currentTeamPairing={teamPairingWaiting} teamBuzzing={teamIdBuzzing} />
+        </div>
+      </Flex>
+    )}
+  </>);
 }
 
 export default App;
