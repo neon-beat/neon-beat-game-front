@@ -200,7 +200,7 @@ const useNeonBeatPublic = () => {
       setTeamIdBuzzing(undefined);
       setBuzzerIdBuzzing(undefined);
     }
-    if (gameState !== GameState.PREP_READY) {
+    if (gameState !== GameState.PREP_READY && gameState !== GameState.IDLE) {
       getTeams();
     }
   }, [gameState]);

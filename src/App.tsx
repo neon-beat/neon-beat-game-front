@@ -62,6 +62,9 @@ function App() {
     if (!audioRef.current) return;
 
     const audio = audioRef.current;
+    if (audio.volume > 0) return; // Prevent overlapping fades
+    if (audio.volume === targetVolume) return;
+
     audio.volume = 0;
     audio.play().catch((error) => {
       console.error('Error playing intro audio:', error);
@@ -100,13 +103,17 @@ function App() {
     if (!audio) return;
 
     audio.loop = true;
-    audio.volume = 0;
+    audio.volume = 1;
     audio.play().then(() => {
       setIsPlaying(true);
     }).catch((error) => {
       console.error('Error playing intro audio:', error);
       setIsPlaying(false);
     });
+
+    const interPoll = setInterval(() => {
+      console.log('Intro audio volume:', audio.volume);
+    }, 50);
 
     // Cleanup function to clear any pending fade timeouts
     return () => {
@@ -123,6 +130,7 @@ function App() {
   }, [])
 
   useEffect(() => {
+    if (!gameState) return;
     // Clear any existing fade timeout
     if (fadeTimeoutRef.current) {
       clearTimeout(fadeTimeoutRef.current);
@@ -138,7 +146,7 @@ function App() {
       if (isPlaying !== true) fadeInAudio(1000, 1); // 1000ms fade in to full volume
       setIsPlaying(true);
     }
-  }, [gameState, fadeOutAudio, fadeInAudio]);
+  }, [gameState]);
 
   if (!gameState || showHomeScreenState.map((s) => s.toString()).includes(gameState)) return (
     <Flex vertical justify="center" align="center" className="h-screen">

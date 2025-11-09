@@ -11,13 +11,13 @@ interface EqualizerSettings {
 }
 
 const DEFAULT_SETTINGS: EqualizerSettings = {
-  amplitude: 5,
-  cubeSpacing: 10,
-  cubeSideLength: 0.03,
-  gridCols: 300,
-  gridRows: 300,
+  amplitude: 3,
+  cubeSpacing: 20,
+  cubeSideLength: 0.02,
+  gridCols: 100,
+  gridRows: 100,
   cameraFov: 90,
-  cameraPosition: [15, 15, 8]
+  cameraPosition: [5, 5, 5]
 };
 
 const STORAGE_KEY = 'neon-beat-equalizer-settings';
