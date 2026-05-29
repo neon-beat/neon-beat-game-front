@@ -1,24 +1,23 @@
 import logo from './assets/logo.png';
 import './App.css';
-import YoutubePlayer from './components/YoutubePlayer/YoutubePlayer';
-import Teams from './components/Teams/Teams';
 import { Flex } from 'antd';
 import useNeonBeatPublic from './hooks/useNeonBeatPublic';
 import useEqualizerSettings from './hooks/useEqualizerSettings';
-import Fields from './components/Fields/Fields';
 import { GameState } from './types/game';
 import { useEffect, useRef, useCallback, useState } from 'react';
 import intro from './assets/sounds/intro.mp3';
 import Scores from './components/Scores/Scores';
 import Equalizer from 'r3f-equalizer';
+import BlindtestGame from './components/Blindtest/BlindtestGame';
+import QuizzGame from './components/Quizz/QuizzGame';
 
 const introAudio = new Audio(intro);
 
 function App() {
-  const { gameState, teams, song, teamPairingWaiting, pointFieldsFound, bonusFieldsFound, teamIdBuzzing } = useNeonBeatPublic();
+  const { gameState, gameMode, teams, question, teamPairingWaiting, foundAnswerIds, teamIdBuzzing } = useNeonBeatPublic();
   const { amplitude, cubeSpacing, cubeSideLength, gridCols, gridRows, cameraFov, cameraPosition } = useEqualizerSettings();
   const audioRef = useRef(introAudio);
-  const fadeTimeoutRef = useRef<NodeJS.Timeout | null>(null);
+  const fadeTimeoutRef = useRef<ReturnType<typeof setTimeout> | null>(null);
   const [isPlaying, setIsPlaying] = useState(false);
 
   const introSongPlayingStates = [
@@ -113,10 +112,6 @@ function App() {
       setIsPlaying(false);
     });
 
-    const interPoll = setInterval(() => {
-      console.log('Intro audio volume:', audio.volume);
-    }, 50);
-
     // Cleanup function to clear any pending fade timeouts
     return () => {
       if (fadeTimeoutRef.current) {
@@ -201,29 +196,25 @@ function App() {
         </div>
       </Flex>
     )}
-    {gameState && !showHomeScreenState.map((s) => s.toString()).includes(gameState) && (
-      <Flex vertical align="center" gap="small" className="h-screen">
-        <div>
-          <img src={logo} alt="Logo" className="h-40 m-auto" />
-        </div>
-        <Flex gap="small" className="grow-1 w-full !px-4">
-          <div className="max-w-100 grow-1 custom-gradient custom-border m-[6px]">
-            <Fields
-              pointFields={song?.point_fields ?? []}
-              bonusFields={song?.bonus_fields ?? []}
-              pointFieldsFound={pointFieldsFound}
-              bonusFieldsFound={bonusFieldsFound}
-              revealAll={gameState === GameState.REVEAL}
-            />
-          </div>
-          <div className="grow-1 custom-gradient custom-border m-[6px]">
-            <YoutubePlayer youtubeUrl={song?.url} playing={gameState === GameState.PLAYING || gameState === GameState.REVEAL} showOverlay={gameState !== GameState.REVEAL} duration={song?.guess_duration_ms} start={song?.starts_at_ms} />
-          </div>
-        </Flex>
-        <div className="!p-2">
-          <Teams teams={teams ?? []} currentTeamPairing={teamPairingWaiting} teamBuzzing={teamIdBuzzing} />
-        </div>
-      </Flex>
+    {gameState && !showHomeScreenState.map((s) => s.toString()).includes(gameState) && gameMode === 'blindtest' && (
+      <BlindtestGame
+        gameState={gameState}
+        question={question?.type === 'blind_test' ? question : null}
+        teams={teams ?? []}
+        teamPairingWaiting={teamPairingWaiting}
+        teamIdBuzzing={teamIdBuzzing}
+        foundAnswerIds={foundAnswerIds}
+      />
+    )}
+    {gameState && !showHomeScreenState.map((s) => s.toString()).includes(gameState) && gameMode === 'quizz' && (
+      <QuizzGame
+        gameState={gameState}
+        teams={teams ?? []}
+        teamPairingWaiting={teamPairingWaiting}
+        teamIdBuzzing={teamIdBuzzing}
+        question={question?.type === 'multiple_choice' || question?.type === 'open' ? question : null}
+        foundAnswerIds={foundAnswerIds}
+      />
     )}
   </>);
 }

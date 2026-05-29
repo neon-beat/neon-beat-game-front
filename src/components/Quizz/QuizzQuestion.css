@@ -1,0 +1,42 @@
+.quizz-question-container {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  /* height: 100%; */
+  padding: 2rem;
+  gap: 1.5rem;
+}
+
+.quizz-question-label {
+  font-family: 'Press Start 2P', monospace;
+  font-size: 1rem;
+  color: #ff3cac;
+  letter-spacing: 4px;
+  text-transform: uppercase;
+  text-shadow:
+    0 0 8px #ff3cac,
+    0 0 20px #c207a0;
+}
+
+.quizz-question-text {
+  font-family: 'Press Start 2P', monospace;
+  color: #ffcc00;
+  text-align: center;
+  text-transform: uppercase;
+  letter-spacing: 3px;
+  line-height: 1;
+  word-break: break-word;
+  text-shadow:
+    0 0 10px rgba(255, 204, 0, 0.6),
+    0 0 30px rgba(255, 204, 0, 0.3);
+}
+
+.quizz-question-subtext {
+  font-family: 'Press Start 2P', monospace;
+  font-size: clamp(0.75rem, 2vh, 1rem);
+  color: #a08898;
+  text-align: center;
+  line-height: 1;
+  word-break: break-word;
+}

@@ -1,34 +1,36 @@
 import React from 'react';
 import './fields.css';
 import { Flex } from 'antd';
-import type { Field } from '../../types/game';
+import type { BlindTestAnswerSnapshot } from '../../types/game';
 
 interface FieldsProps {
-  pointFields: Field[];
-  bonusFields: Field[];
-  pointFieldsFound?: string[], // optional found fields to reveal
-  bonusFieldsFound?: string[], // optional found fields to reveal
-  revealAll?: boolean; // optional flag to reveal all fields
+  answers: Record<string, BlindTestAnswerSnapshot>;
+  foundAnswerIds?: number[];
+  revealAll?: boolean;
 }
 
-const Fields: React.FC<FieldsProps> = ({ pointFields, bonusFields, pointFieldsFound, bonusFieldsFound, revealAll }) => {
+const Fields: React.FC<FieldsProps> = ({ answers, foundAnswerIds, revealAll }) => {
+  const entries = Object.entries(answers).map(([id, answer]) => ({ id: Number(id), answer }));
+  const pointAnswers = entries.filter(({ answer }) => !answer.is_bonus);
+  const bonusAnswers = entries.filter(({ answer }) => answer.is_bonus);
+
   return (
     <Flex vertical gap="12px" className="h-full overflow-auto !p-2 min-w-[300px]">
-      {pointFields.map((field) => {
-        const revealField = revealAll === true || pointFieldsFound?.includes(field.key);
+      {pointAnswers.map(({ id, answer }) => {
+        const revealed = revealAll === true || foundAnswerIds?.includes(id) === true;
         return (
-          <div key={field.key} className={`field-item ${revealField ? 'field-item-revealed' : ''}`}>
-            <span className="field-key">{field.key}</span>
-            <span className="field-value">{revealField === true ? field.value : '????'}</span>
+          <div key={id} className={`field-item ${revealed ? 'field-item-revealed' : ''}`}>
+            <span className="field-key">{answer.key}</span>
+            <span className="field-value">{revealed ? answer.value : '????'}</span>
           </div>
         );
       })}
-      {bonusFields.map((field) => {
-        const revealField = bonusFieldsFound?.includes(field.key);
+      {bonusAnswers.map(({ id, answer }) => {
+        const revealed = foundAnswerIds?.includes(id) === true;
         return (
-          <div key={field.key} className={`field-item ${revealField ? 'field-item-revealed' : ''}`}>
-            <span className="field-key">{field.key}</span>
-            <span className="field-value">{revealField === true ? field.value : '????'}</span>
+          <div key={id} className={`field-item ${revealed ? 'field-item-revealed' : ''}`}>
+            <span className="field-key">{answer.key}</span>
+            <span className="field-value">{revealed ? answer.value : '????'}</span>
           </div>
         );
       })}

@@ -1,5 +1,5 @@
 import { useEffect, useState, useCallback } from "react";
-import { GameState, type AnswerValidation, type Song, type Team } from "../types/game";
+import { GameState, type QuestionSnapshot, type QuestionValidation, type Team } from "../types/game";
 import wrongSong from '../assets/sounds/qpuc-cestnon.mp3';
 import rightSong from '../assets/sounds/kk-oui-oui-oui-oui-oui.mp3';
 
@@ -14,13 +14,23 @@ const useNeonBeatPublic = () => {
   const [isServerReady, setIsServerReady] = useState<boolean>(false);
   const [game, setGame] = useState<string | null>(null);
   const [teams, setTeams] = useState<Team[] | null>(null);
-  const [song, setSong] = useState<Song | null>(null);
+  const [question, setQuestion] = useState<QuestionSnapshot | null>(null);
+
+  const [gameMode, setGameMode] = useState<string | null>(null);
   const [gameState, setGameState] = useState<string | null>(null);
+
   const [teamPairingWaiting, setTeamPairingWaiting] = useState<string | null>(null);
-  const [pointFieldsFound, setPointFieldsFound] = useState<string[]>([]);
-  const [bonusFieldsFound, setBonusFieldsFound] = useState<string[]>([]);
+  const [foundAnswerIds, setFoundAnswerIds] = useState<number[]>([]);
+  const [revealedHintIds, setRevealedHintIds] = useState<number[]>([]);
   const [buzzerIdBuzzing, setBuzzerIdBuzzing] = useState<string | undefined>();
   const [teamIdBuzzing, setTeamIdBuzzing] = useState<string | undefined>();
+
+  const applyQuestion = useCallback((q: QuestionSnapshot, answersIds: number[], hintsIds: number[]) => {
+    setQuestion(q);
+    setFoundAnswerIds(answersIds);
+    setRevealedHintIds(hintsIds);
+    setGameMode(q.type === 'blind_test' ? 'blindtest' : 'quizz');
+  }, []);
 
   const getTeams = useCallback(async () => {
     const data = await fetch(`${apiBaseUrl}/public/teams`);
@@ -30,13 +40,15 @@ const useNeonBeatPublic = () => {
     }
   }, [apiBaseUrl]);
 
-  const getSong = useCallback(async () => {
-    const data = await fetch(`${apiBaseUrl}/public/song`);
+  const getQuestion = useCallback(async () => {
+    const data = await fetch(`${apiBaseUrl}/public/question`);
     if (data.ok) {
       const json = await data.json();
-      setSong(json.song);
+      if (json.question) {
+        applyQuestion(json.question, json.answers_ids ?? [], json.hints_ids ?? []);
+      }
     }
-  }, [apiBaseUrl]);
+  }, [apiBaseUrl, applyQuestion]);
 
   const getPhase = useCallback(async () => {
     const data = await fetch(`${apiBaseUrl}/public/phase`);
@@ -46,8 +58,11 @@ const useNeonBeatPublic = () => {
       if (json.game_id) {
         setGame(json.game_id);
       }
+      if (json.question) {
+        applyQuestion(json.question, json.answers_ids ?? [], json.hints_ids ?? []);
+      }
     }
-  }, [apiBaseUrl]);
+  }, [apiBaseUrl, applyQuestion]);
 
   // Helper to safely parse JSON
   const parseEventData = useCallback(<T,>(data: string): T | null => {
@@ -66,34 +81,30 @@ const useNeonBeatPublic = () => {
     }
   }, [parseEventData]);
 
-  // const handleGameSessionEvent = useCallback((event: MessageEvent) => {
-  //   const data = parseEventData<Game>(event.data);
-  //   if (data) {
-  //     console.log('game.session:', data);
-  //     setGame(data);
-  //     if (data.teams) {
-  //       setTeams(data.teams);
-  //     }
-  //   }
-  // }, [parseEventData]);
-
   const handlePhaseChangedEvent = useCallback((event: MessageEvent) => {
-    const data = parseEventData<{ phase: string, song?: Song, paused_buzzer?: string }>(event.data);
+    const data = parseEventData<{
+      phase: string;
+      game_id?: string;
+      paused_buzzer?: string;
+      question?: QuestionSnapshot;
+      answers_ids?: number[];
+      hints_ids?: number[];
+    }>(event.data);
     if (data) {
       console.log('phase_changed:', data);
       if (data.phase === GameState.PLAYING && gameState === GameState.REVEAL) {
-        setPointFieldsFound([]);
-        setBonusFieldsFound([]);
+        setFoundAnswerIds([]);
+        setRevealedHintIds([]);
       }
       setGameState(data.phase);
-      if (data.song) {
-        setSong(data.song);
+      if (data.question) {
+        applyQuestion(data.question, data.answers_ids ?? [], data.hints_ids ?? []);
       }
       if (data.phase === GameState.PAUSED && data.paused_buzzer) {
         setBuzzerIdBuzzing(data.paused_buzzer);
       }
     }
-  }, [parseEventData, gameState]);
+  }, [parseEventData, gameState, applyQuestion]);
 
   const handlePairingWaitingEvent = useCallback((event: MessageEvent) => {
     const data = parseEventData<{ team_id: string }>(event.data);
@@ -126,12 +137,19 @@ const useNeonBeatPublic = () => {
     }
   }, [parseEventData]);
 
-  const handleFieldsFoundEvent = useCallback((event: MessageEvent) => {
-    const data = parseEventData<{ song_id: number, point_fields: string[], bonus_fields: string[] }>(event.data);
+  const handleFoundAnswersEvent = useCallback((event: MessageEvent) => {
+    const data = parseEventData<{ question_id: number, answers_ids: number[] }>(event.data);
     if (data) {
-      console.log('fields_found:', data);
-      setPointFieldsFound(data.point_fields);
-      setBonusFieldsFound(data.bonus_fields);
+      console.log('question.found_answers:', data);
+      setFoundAnswerIds(data.answers_ids);
+    }
+  }, [parseEventData]);
+
+  const handleHintsEvent = useCallback((event: MessageEvent) => {
+    const data = parseEventData<{ question_id: number, hints_ids: number[] }>(event.data);
+    if (data) {
+      console.log('question.hints:', data);
+      setRevealedHintIds(data.hints_ids);
     }
   }, [parseEventData]);
 
@@ -153,9 +171,9 @@ const useNeonBeatPublic = () => {
   }, [getTeams]);
 
   const handleValidateAnswer = useCallback((event: MessageEvent) => {
-    const data = parseEventData<AnswerValidation>(event.data);
+    const data = parseEventData<{ question_id: number, valid: QuestionValidation }>(event.data);
     if (data) {
-      console.log('answer_validation:', data);
+      console.log('question.validation:', data);
       if (data.valid === "wrong") {
         wrongAudio.volume = 0.5;
         wrongAudio.play().catch((error) => {
@@ -185,15 +203,15 @@ const useNeonBeatPublic = () => {
   useEffect(() => {
     if (!game) return;
     getTeams();
-    getSong();
-  }, [game, getTeams, getSong]);
+    getQuestion();
+  }, [game, getTeams, getQuestion]);
 
   useEffect(() => {
     if (!gameState) return;
     if (gameState === GameState.IDLE || gameState === GameState.PREP_READY || gameState === GameState.SCORES) {
-      setPointFieldsFound([]);
-      setBonusFieldsFound([]);
-      setSong(null);
+      setFoundAnswerIds([]);
+      setRevealedHintIds([]);
+      setQuestion(null);
       setTeams(null);
     }
     if (gameState === GameState.REVEAL) {
@@ -228,28 +246,28 @@ const useNeonBeatPublic = () => {
     };
 
     // Event handlers
-    sse.addEventListener('fields_found', handleFieldsFoundEvent);
-    sse.addEventListener('answer_validation', handleValidateAnswer);
+    sse.addEventListener('question.found_answers', handleFoundAnswersEvent);
+    sse.addEventListener('question.hints', handleHintsEvent);
+    sse.addEventListener('question.validation', handleValidateAnswer);
     sse.addEventListener('score_adjustment', handleScoreAdjustmentEvent);
     sse.addEventListener('phase_changed', handlePhaseChangedEvent);
     sse.addEventListener('team.created', handleUpdateTeams);
     sse.addEventListener('team.updated', handleUpdateTeams);
     sse.addEventListener('team.deleted', handleUpdateTeams);
-    // sse.addEventListener('game.session', handleGameSessionEvent);
     sse.addEventListener('pairing.waiting', handlePairingWaitingEvent);
     sse.addEventListener('pairing.assigned', handlePairingAssignedEvent);
     sse.addEventListener('pairing.restored', handlePairingRestoredEvent);
     sse.addEventListener('test.buzz', handleEvents);
 
     return () => {
-      sse.removeEventListener('fields_found', handleFieldsFoundEvent);
-      sse.removeEventListener('answer_validation', handleValidateAnswer);
+      sse.removeEventListener('question.found_answers', handleFoundAnswersEvent);
+      sse.removeEventListener('question.hints', handleHintsEvent);
+      sse.removeEventListener('question.validation', handleValidateAnswer);
       sse.removeEventListener('score_adjustment', handleScoreAdjustmentEvent);
       sse.removeEventListener('phase_changed', handlePhaseChangedEvent);
       sse.removeEventListener('team.created', handleUpdateTeams);
       sse.removeEventListener('team.updated', handleUpdateTeams);
       sse.removeEventListener('team.deleted', handleUpdateTeams);
-      // sse.removeEventListener('game.session', handleGameSessionEvent);
       sse.removeEventListener('pairing.waiting', handlePairingWaitingEvent);
       sse.removeEventListener('pairing.assigned', handlePairingAssignedEvent);
       sse.removeEventListener('pairing.restored', handlePairingRestoredEvent);
@@ -257,7 +275,7 @@ const useNeonBeatPublic = () => {
     };
 
   }, [sse, parseEventData,
-    handleFieldsFoundEvent, handleValidateAnswer, handleScoreAdjustmentEvent,
+    handleFoundAnswersEvent, handleHintsEvent, handleValidateAnswer, handleScoreAdjustmentEvent,
     handlePhaseChangedEvent, handleUpdateTeams, handlePairingWaitingEvent,
     handlePairingAssignedEvent, handlePairingRestoredEvent, handleEvents,
   ]);
@@ -269,11 +287,12 @@ const useNeonBeatPublic = () => {
     // Game state
     game,
     teams,
-    song,
+    question,
+    gameMode,
     gameState,
     teamPairingWaiting,
-    pointFieldsFound,
-    bonusFieldsFound,
+    foundAnswerIds,
+    revealedHintIds,
     teamIdBuzzing,
   };
 }

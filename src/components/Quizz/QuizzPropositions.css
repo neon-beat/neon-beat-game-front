@@ -1,0 +1,87 @@
+.propositions-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 12px;
+  padding: 12px;
+  flex: 1;
+  min-height: 0;
+  justify-items: center;
+}
+
+.proposition-item {
+  display: flex;
+  width: 100%;
+  flex-grow: 1;
+  align-items: center;
+  gap: 1rem;
+  padding: 1rem 1.5rem;
+  background: #2a0035 url(/images/grain.svg);
+  background-blend-mode: multiply;
+  border: 4px solid #d70085;
+  border-radius: 10px;
+  box-shadow:
+    0 0 0 2px #ff3cac,
+    0 0 0 4px #670070,
+    inset -2px -2px 0 #0e001e;
+  font-family: 'Press Start 2P', monospace;
+  font-size: clamp(4rem, 2.5vh, 6rem);
+  color: #ffcc00;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  transition: background 0.4s, color 0.4s, box-shadow 0.4s, border-color 0.4s;
+}
+
+.proposition-key {
+  font-size: 1.5em;
+  color: #ff3cac;
+  flex-shrink: 0;
+  min-width: 1.5ch;
+  text-shadow:
+    0 0 8px #ff3cac,
+    0 0 20px #c207a0;
+}
+
+.proposition-text {
+  flex: 1;
+  text-align: center;
+}
+
+/* Hidden: block visible, text replaced by "?" */
+.proposition-hidden .proposition-text {
+  color: #554433;
+  text-shadow: none;
+}
+
+/* Revealed true: green */
+.proposition-revealed_true {
+  background: #005800 url(/images/grain.svg);
+  background-blend-mode: multiply;
+  border-color: #21ca13;
+  box-shadow:
+    0 0 0 2px #21ca13,
+    0 0 0 4px #0e5c0b,
+    inset -2px -2px 0 #297127;
+}
+
+.proposition-revealed_true .proposition-key,
+.proposition-revealed_true .proposition-text {
+  color: rgb(125, 255, 132);
+  text-shadow: none;
+}
+
+/* Revealed false: red with strikethrough */
+.proposition-revealed_false {
+  background: #5c0000 url(/images/grain.svg);
+  background-blend-mode: multiply;
+  border-color: #ee0000;
+  box-shadow:
+    0 0 0 2px #ff3c3c,
+    0 0 0 4px #670000,
+    inset -2px -2px 0 #1e0000;
+}
+
+.proposition-revealed_false .proposition-text,
+.proposition-revealed_false .proposition-key {
+  color: #ff8080;
+  text-shadow: none;
+}
