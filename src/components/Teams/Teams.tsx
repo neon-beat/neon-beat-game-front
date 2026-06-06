@@ -24,22 +24,25 @@ const Teams: React.FC<TeamsProps> = ({ teams, renderTeamTile, onTeamClick, class
 
   useEffect(() => {
     const announcer = document.querySelector('.teams-announcer') as HTMLElement;
+    if (!announcer) return;
+
+    let hideTimeout: ReturnType<typeof setTimeout> | undefined;
     if (teamBuzzing) {
-      if (announcer) {
-        announcer.classList.add('teams-announcer-visible');
-        setTimeout(() => {
-          announcer.classList.remove('teams-announcer-visible');
-        }, 5000);
-      }
-    } else if (isPaused) {
-      if (announcer) {
-        announcer.classList.add('teams-announcer-visible');
-      }
-    } else {
-      if (announcer) {
+      announcer.classList.add('teams-announcer-visible');
+      hideTimeout = setTimeout(() => {
         announcer.classList.remove('teams-announcer-visible');
-      }
+      }, 5000);
+    } else if (isPaused) {
+      announcer.classList.add('teams-announcer-visible');
+    } else {
+      announcer.classList.remove('teams-announcer-visible');
     }
+
+    // Cancel any pending auto-hide before the next run so a buzz timeout
+    // can't hide the '⏸' that replaces the team name on pause.
+    return () => {
+      if (hideTimeout) clearTimeout(hideTimeout);
+    };
   }, [teamBuzzing, isPaused]);
 
   if (!teams?.length) {
