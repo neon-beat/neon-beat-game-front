@@ -27,9 +27,6 @@ const Teams: React.FC<TeamsProps> = ({ teams, renderTeamTile, onTeamClick, class
     if (teamBuzzing) {
       if (announcer) {
         announcer.classList.add('teams-announcer-visible');
-        setTimeout(() => {
-          announcer.classList.remove('teams-announcer-visible');
-        }, 5000);
       }
     } else if (isPaused) {
       if (announcer) {
