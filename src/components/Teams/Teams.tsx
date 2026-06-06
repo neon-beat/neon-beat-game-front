@@ -10,6 +10,7 @@ interface TeamsProps {
   className?: string;
   teamBuzzing?: string;
   currentTeamPairing?: string | null;
+  gameState?: string;
 }
 
 /**
@@ -18,7 +19,8 @@ interface TeamsProps {
  *  - score
  *  - buzzing status (boolean) affecting style
  */
-const Teams: React.FC<TeamsProps> = ({ teams, renderTeamTile, onTeamClick, className = '', teamBuzzing, currentTeamPairing }) => {
+const Teams: React.FC<TeamsProps> = ({ teams, renderTeamTile, onTeamClick, className = '', teamBuzzing, currentTeamPairing, gameState }) => {
+  const isPaused = gameState === 'pause' && !teamBuzzing;
 
   useEffect(() => {
     const announcer = document.querySelector('.teams-announcer') as HTMLElement;
@@ -27,14 +29,18 @@ const Teams: React.FC<TeamsProps> = ({ teams, renderTeamTile, onTeamClick, class
         announcer.classList.add('teams-announcer-visible');
         setTimeout(() => {
           announcer.classList.remove('teams-announcer-visible');
-        }, 5000); // Announce for 3 seconds
+        }, 5000);
+      }
+    } else if (isPaused) {
+      if (announcer) {
+        announcer.classList.add('teams-announcer-visible');
       }
     } else {
       if (announcer) {
         announcer.classList.remove('teams-announcer-visible');
       }
     }
-  }, [teamBuzzing]);
+  }, [teamBuzzing, isPaused]);
 
   if (!teams?.length) {
     return (
@@ -45,7 +51,9 @@ const Teams: React.FC<TeamsProps> = ({ teams, renderTeamTile, onTeamClick, class
   return (
     <>
       <div id="teams-announcer" className="teams-announcer">
-        <p className="text-9xl">{teams.find((t) => t.id === teamBuzzing)?.name}</p>
+        <p className="text-9xl">
+          {teamBuzzing ? teams.find((t) => t.id === teamBuzzing)?.name : '⏸'}
+        </p>
       </div>
       <div className={`teams-wrapper flex justify-center gap-4 ${className}`} data-testid="teams-wrapper">
         {teams.map(team => {

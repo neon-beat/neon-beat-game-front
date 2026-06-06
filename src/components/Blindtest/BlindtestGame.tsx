@@ -39,7 +39,7 @@ function BlindtestGame({ gameState, question, teams, teamPairingWaiting, teamIdB
         </div>
       </Flex>
       <div className="!p-2">
-        <Teams teams={teams} currentTeamPairing={teamPairingWaiting} teamBuzzing={teamIdBuzzing} />
+        <Teams teams={teams} currentTeamPairing={teamPairingWaiting} teamBuzzing={teamIdBuzzing} gameState={gameState} />
       </div>
     </Flex>
   );

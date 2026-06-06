@@ -49,11 +49,11 @@ function QuizzGame({ gameState, teams, teamPairingWaiting, teamIdBuzzing, questi
         )}
         {question?.type === 'open' && (() => {
           const found = deriveOpenFoundAnswers(question, foundAnswerIds);
-          return found.length > 0 ? <QuizzPropositions propositions={found} /> : null;
+          return found.length > 0 ? <QuizzPropositions propositions={found} showKeys={false} /> : null;
         })()}
       </div>
       <div className="!p-2">
-        <Teams teams={teams} currentTeamPairing={teamPairingWaiting} teamBuzzing={teamIdBuzzing} />
+        <Teams teams={teams} currentTeamPairing={teamPairingWaiting} teamBuzzing={teamIdBuzzing} gameState={gameState} />
       </div>
     </Flex>
   );

@@ -1,11 +1,15 @@
 .propositions-grid {
   display: grid;
   grid-template-columns: repeat(2, 1fr);
-  gap: 12px;
-  padding: 12px;
+  gap: 6px;
+  padding: 6px;
   flex: 1;
   min-height: 0;
   justify-items: center;
+}
+
+.propositions-grid>.proposition-item:only-child {
+  grid-column: 1 / -1;
 }
 
 .proposition-item {
@@ -13,8 +17,8 @@
   width: 100%;
   flex-grow: 1;
   align-items: center;
-  gap: 1rem;
-  padding: 1rem 1.5rem;
+  gap: 0.5rem;
+  padding: 0.4rem 0.75rem;
   background: #2a0035 url(/images/grain.svg);
   background-blend-mode: multiply;
   border: 4px solid #d70085;
