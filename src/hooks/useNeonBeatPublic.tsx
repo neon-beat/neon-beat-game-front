@@ -33,7 +33,9 @@ const useNeonBeatPublic = () => {
   }, []);
 
   const getTeams = useCallback(async () => {
-    const data = await fetch(`${apiBaseUrl}/public/teams`);
+    const data = await fetch(`${apiBaseUrl}/public/teams`, {
+      credentials: 'include',
+    });
     if (data.ok) {
       const json = await data.json();
       setTeams(json.teams);
@@ -41,7 +43,9 @@ const useNeonBeatPublic = () => {
   }, [apiBaseUrl]);
 
   const getQuestion = useCallback(async () => {
-    const data = await fetch(`${apiBaseUrl}/public/question`);
+    const data = await fetch(`${apiBaseUrl}/public/question`, {
+      credentials: 'include',
+    });
     if (data.ok) {
       const json = await data.json();
       if (json.question) {
@@ -51,7 +55,9 @@ const useNeonBeatPublic = () => {
   }, [apiBaseUrl, applyQuestion]);
 
   const getPhase = useCallback(async () => {
-    const data = await fetch(`${apiBaseUrl}/public/phase`);
+    const data = await fetch(`${apiBaseUrl}/public/phase`, {
+      credentials: 'include',
+    });
     if (data.ok) {
       const json = await data.json();
       setGameState(json.phase);
@@ -192,7 +198,9 @@ const useNeonBeatPublic = () => {
 
   useEffect(() => {
     if (!apiBaseUrl) return;
-    const eventSource = new EventSource(`${apiBaseUrl}/sse/public`);
+    const eventSource = new EventSource(`${apiBaseUrl}/sse/public`, {
+      withCredentials: true,
+    });
     setSse(eventSource);
     getPhase();
     return () => {
